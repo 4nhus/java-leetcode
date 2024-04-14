@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.Arrays;
 
 public class DynamicProgramming {
     public static int coinChange(int [] coins, int total) {
