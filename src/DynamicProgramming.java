@@ -1,8 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class DynamicProgramming {
-    public static int coinChange(int [] coins, int total) {
+    public static int coinChange(int[] coins, int total) {
         if (total == 0) {
             return 0;
         }
@@ -91,36 +93,41 @@ public class DynamicProgramming {
 
         return combinationsList.get(target);
     }
-
+    
     public static String longestPalindromicSubstring(String s) {
-        boolean[][] palindrome = new boolean[s.length()][s.length()];
+        int n = s.length();
+        boolean[][] palindrome = new boolean[n][n];
 
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < n; i++) {
             palindrome[i][i] = true;
         }
 
-        int maxLength = 0;
+        int maxLength = 1;
         int maxI = 0;
         int maxJ = 0;
 
-        for (int i = s.length() - 1; i >= 0; i--) {
-            for (int j = 0; j < s.length(); j++) {
-                if (i > j || s.charAt(i) != s.charAt(j)) {
-                    continue;
-                }
+        for (int i = 0; i < n - 1; i++) {
+            palindrome[i][i + 1] = s.charAt(i) == s.charAt(i + 1);
+            if (palindrome[i][i + 1]) {
+                maxLength = 2;
+                maxI = i;
+                maxJ = i + 1;
+            }
+        }
 
-                boolean downIsPalindrome = i < s.length() - 1 && palindrome[i + 1][j];
-                boolean leftIsPalindrome = j > 0 && palindrome[i][j - 1];
+        for (int length = 3; length <= n; length++) {
+            int i = 0;
+            for (int j = length - 1; j < n; j++) {
+                palindrome[i][j] = palindrome[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
 
-                if (downIsPalindrome || leftIsPalindrome) {
-                    palindrome[i][j] = true;
-
+                if (palindrome[i][j]) {
                     if (j - i > maxLength) {
                         maxLength = j - i;
                         maxI = i;
                         maxJ = j;
                     }
                 }
+                i++;
             }
         }
 
@@ -176,7 +183,7 @@ public class DynamicProgramming {
         return num[m - 1][n - 1];
     }
 
-    public static boolean wordBreak (String s, List<String> wordDict ) {
+    public static boolean wordBreak(String s, List<String> wordDict) {
         boolean[] possible = new boolean[s.length() + 1];
         possible[0] = true;
 
@@ -202,7 +209,7 @@ public class DynamicProgramming {
         int[] profits = new int[n];
 
         for (int i = 0; i < n; i++) {
-            jobs.add(new int[] {startTime[i], endTime[i], profit[i]});
+            jobs.add(new int[]{startTime[i], endTime[i], profit[i]});
         }
 
         jobs.sort((jobA, jobB) -> jobA[1] - jobB[1]);
