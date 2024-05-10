@@ -101,4 +101,81 @@ public class Graphs {
 
         return true;
     }
+
+
+    public static Node clone(Node root) {
+        return cloneHelper(root, new HashMap<>());
+    }
+
+    public static Node cloneHelper(Node root, Map<Integer, Node> clones) {
+        if (root == null) {
+            return null;
+        }
+
+        Node clone = new Node(root.data);
+        clones.put(clone.data, clone);
+
+        for (Node neighbour : root.neighbors) {
+            Node neighbourClone = clones.containsKey(neighbour.data) ? clones.get(neighbour.data) : cloneHelper(neighbour, clones);
+            clone.neighbors.add(neighbourClone);
+        }
+
+        return clone;
+    }
+
+    public static boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Construct graph first
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
+
+        for (int i = 0; i < numCourses; i++) {
+            graph.put(i, new HashSet<>());
+        }
+
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+
+        Set<Integer> finished = new HashSet<>();
+        Set<Integer> visited = new HashSet<>();
+
+        for (int node : graph.keySet()) {
+            if (dfsCycleFind(node, graph, finished, visited)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean dfsCycleFind(int node, Map<Integer, Set<Integer>> graph, Set<Integer> finished, Set<Integer> visited) {
+        if (finished.contains(node)) {
+            return false;
+        }
+
+        if (visited.contains(node)) {
+            return true;
+        }
+
+        visited.add(node);
+
+        for (int neighbour : graph.get(node)) {
+            if (dfsCycleFind(neighbour, graph, finished, visited)) {
+                return true;
+            }
+        }
+
+        finished.add(node);
+
+        return false;
+    }
+
+    public static class Node {
+        int data;
+        List<Node> neighbors;
+
+        public Node(int data) {
+            this.data = data;
+            this.neighbors = new ArrayList<Node>();
+        }
+    }
 }
