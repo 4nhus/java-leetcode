@@ -44,4 +44,33 @@ public class Arrays {
 
         return true;
     }
+
+    public static int leastTime(char[] tasks, int n) {
+        if (n == 0) {
+            return tasks.length;
+        }
+
+        int[] counts = new int[26];
+
+        for (char task : tasks) {
+            counts[task - 'A']++;
+        }
+
+        java.util.Arrays.sort(counts);
+
+        int idleTime = (counts[counts.length - 1] - 1) * n;
+        int i = counts.length - 2;
+
+        while (counts[i] != 0) {
+            idleTime -= Math.min(counts[counts.length - 1] - 1, counts[i]);
+
+            if (idleTime <= 0) {
+                break;
+            }
+
+            i--;
+        }
+
+        return tasks.length + Math.max(idleTime, 0);
+    }
 }
