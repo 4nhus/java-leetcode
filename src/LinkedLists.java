@@ -44,4 +44,43 @@ public class LinkedLists {
 
         return dummy.next;
     }
+
+    public static LinkedListNode reorderList(LinkedListNode head) {
+        if (head.next == null) {
+            return head;
+        }
+
+        // Split the list in two
+        LinkedListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        LinkedListNode curr2 = slow.next, prev2 = null, next2 = curr2.next;
+        slow.next = null;
+
+        // Reverse second list
+        while (curr2 != null) {
+            next2 = curr2.next;
+            curr2.next = prev2;
+            prev2 = curr2;
+            curr2 = next2;
+        }
+        curr2 = prev2;
+
+        // Combine two lists
+        LinkedListNode curr1 = head, next1 = head.next;
+
+        while (curr1 != null && curr2 != null) {
+            next1 = curr1.next;
+            next2 = curr2.next;
+            curr1.next = curr2;
+            curr2.next = next1;
+            curr2 = next2;
+            curr1 = next1;
+        }
+
+        return head;
+    }
 }
