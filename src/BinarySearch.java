@@ -70,4 +70,35 @@ public class BinarySearch {
 
         return -1;
     }
+
+    public static int findMinInRotatedArray(int[] arr) {
+        // Early return to skip edge case handling in binary search
+        if (arr.length == 1) {
+            return arr[0];
+        } else if (arr.length == 2) {
+            return Math.min(arr[0], arr[1]);
+        }
+
+        int start = 0, end = arr.length - 1;
+
+        while (start <= end) {
+            int middle = start + (end - start) / 2;
+
+            if (arr[middle - 1] > arr[middle]) {
+                return arr[middle];
+            } else if (arr[middle] > arr[middle + 1]){
+                return arr[middle + 1];
+            } else if (arr[start] < arr[end]) {
+                return arr[start];
+            }
+
+            if (arr[middle] < arr[end]) {
+                end = middle - 1;
+            } else {
+                start = middle + 1;
+            }
+        }
+
+        return -1;
+    }
 }
