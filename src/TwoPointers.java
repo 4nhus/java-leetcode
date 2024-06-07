@@ -34,29 +34,20 @@ public class TwoPointers {
         return maximumWater;
     }
     public static int[] productExceptSelf(int[] arr) {
-        // Compute left products
-        int[] leftProducts = new int[arr.length];
-        leftProducts[0] = arr[0];
-        for (int i = 1; i < arr.length; i++) {
-            leftProducts[i] = leftProducts[i - 1] * arr[i];
+        int left = 0, right = arr.length - 1, leftProduct = 1, rightProduct = 1;
+        int[] products = new int[arr.length];
+        Arrays.fill(products, 1);
+
+        while (left < arr.length && right >= 0) {
+            products[left] *= leftProduct;
+            products[right] *= rightProduct;
+            leftProduct *= arr[left];
+            rightProduct *= arr[right];
+            left++;
+            right--;
         }
 
-        // Compute right products
-        int[] rightProducts = new int[arr.length];
-        rightProducts[arr.length - 1] = arr[arr.length - 1];
-        for (int i = arr.length - 2; i >= 0; i--) {
-            rightProducts[i] = rightProducts[i + 1] * arr[i];
-        }
-
-        // Compute resulting array
-        int[] result = new int[arr.length];
-        result[0] = rightProducts[1];
-        result[arr.length - 1] = leftProducts[arr.length - 2];
-        for (int i = 1; i < arr.length - 1; i++) {
-            result[i] = leftProducts[i - 1] * rightProducts[i + 1];
-        }
-
-        return result;
+        return products;
     }
 
     public static int[] sortColors (int[] colors) {

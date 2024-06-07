@@ -1,5 +1,5 @@
 public class FastAndSlowPointers {
-    class LinkedListNode {
+    public static class LinkedListNode {
         public int data;
         public LinkedListNode next;
         // Constructor will be used to make a LinkedListNode type object
