@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class HashMaps {
     public static int longestPalindrome(String s) {
@@ -67,7 +72,7 @@ public class HashMaps {
             map.put(arr[i], i);
         }
 
-        return new int[]{index1, index2};
+        return new int[] {index1, index2};
     }
 
     public static List<Integer> findAnagrams(String a, String b) {
@@ -88,10 +93,12 @@ public class HashMaps {
             countWindow.put(a.charAt(i), countWindow.getOrDefault(a.charAt(i), 0) + 1);
 
             if (i - b.length() + 1 > 0) {
-                countWindow.put(a.charAt(i - b.length()), countWindow.get(a.charAt(i - b.length())) - 1);
+                char endChar = a.charAt(i - b.length());
 
-                if (countWindow.get(a.charAt(i - b.length())) == 0) {
-                    countWindow.remove(a.charAt(i - b.length()));
+                countWindow.put(endChar, countWindow.get(endChar) - 1);
+
+                if (countWindow.get(endChar) == 0) {
+                    countWindow.remove(endChar);
                 }
             }
 
@@ -101,5 +108,22 @@ public class HashMaps {
         }
 
         return anagramIndices;
+    }
+
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> groupMap = new HashMap<>();
+
+        for (String s : strs) {
+            char[] sChars = s.toCharArray();
+            java.util.Arrays.sort(sChars);
+            String sSorted = new String(sChars);
+            if (!groupMap.containsKey(sSorted)) {
+                groupMap.put(sSorted, new ArrayList<>());
+            }
+
+            groupMap.get(sSorted).add(s);
+        }
+
+        return new ArrayList<>(groupMap.values());
     }
 }
