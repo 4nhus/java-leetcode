@@ -1,4 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 public class Trees {
     public static int kthSmallestElement(TreeNode<Integer> root, int k) {
@@ -35,7 +41,8 @@ public class Trees {
         }
         int leftHeight = height(root.left) + 1;
         int rightHeight = height(root.right) + 1;
-        root.data = Math.max(leftHeight + rightHeight, Math.max(diameterOfBinaryTree(root.left), diameterOfBinaryTree(root.right)));
+        root.data =
+                Math.max(leftHeight + rightHeight, Math.max(diameterOfBinaryTree(root.left), diameterOfBinaryTree(root.right)));
         return root.data;
     }
 
@@ -157,8 +164,8 @@ public class Trees {
             return null;
         }
 
-        root.left = invertTree(root.left);
-        root.right = invertTree(root.right);
+        invertTree(root.left);
+        invertTree(root.right);
         TreeNode<Integer> temp = root.left;
         root.left = root.right;
         root.right = temp;
@@ -175,7 +182,7 @@ public class Trees {
     }
 
     public static List<Integer> rightSideView(TreeNode<Integer> root) {
-        List<Integer> view = new ArrayList<Integer>();
+        List<Integer> view = new ArrayList<>();
         return rightSideViewHelper(root, 0, view);
     }
 
@@ -194,7 +201,7 @@ public class Trees {
     }
 
     public static TreeNode<Integer> buildTree(int[] pOrder, int[] iOrder) {
-        int[] pOrderIndex = new int[]{0};
+        int[] pOrderIndex = new int[] {0};
         List<Integer> pOrderList = new ArrayList<>();
         List<Integer> iOrderList = new ArrayList<>();
         for (int i = 0; i < pOrder.length; i++) {
@@ -217,12 +224,14 @@ public class Trees {
         }
 
         root.left = endLeft == 0 ? null : buildTreeHelper(index, pOrder, iOrder.subList(0, endLeft));
-        root.right = endLeft + 1 == iOrder.size() ? null : buildTreeHelper(index, pOrder, iOrder.subList(endLeft + 1, iOrder.size()));
+        root.right =
+                endLeft + 1 == iOrder.size() ? null : buildTreeHelper(index, pOrder, iOrder.subList(endLeft + 1, iOrder.size()));
 
         return root;
     }
 
-    public static TreeNode<Integer> lowestCommonAncestorBST(TreeNode<Integer> root, TreeNode<Integer> node1, TreeNode<Integer> node2) {
+    public static TreeNode<Integer> lowestCommonAncestorBST(TreeNode<Integer> root, TreeNode<Integer> node1,
+                                                            TreeNode<Integer> node2) {
         if (root.data < node1.data && root.data < node2.data) {
             return lowestCommonAncestorBST(root.right, node1, node2);
         } else if (root.data > node1.data && root.data > node2.data) {
@@ -233,7 +242,7 @@ public class Trees {
     }
 
     public static boolean validateBst(TreeNode<Integer> root) {
-        int[] prev = new int[]{Integer.MIN_VALUE};
+        int[] prev = new int[] {Integer.MIN_VALUE};
         return validateBstHelper(prev, root);
     }
 
@@ -280,7 +289,7 @@ public class Trees {
                 traversalString.append(", ");
             }
 
-            traversalString.append(String.valueOf(node.data));
+            traversalString.append(node.data);
             if (node.left != null) {
                 nodes.add(node.left);
                 depths.add(depth + 1);
@@ -295,8 +304,60 @@ public class Trees {
         return traversalString.substring(2);
     }
 
+    public static int maxPathSum(TreeNode<Integer> root) {
+        int[] maxSum = new int[] {Integer.MIN_VALUE};
+
+        maxPathSumHelper(root, maxSum);
+
+        return maxSum[0];
+    }
+
+    public static int maxPathSumHelper(TreeNode<Integer> root, int[] maxSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        int left = Math.max(0, maxPathSumHelper(root.left, maxSum));
+        int right = Math.max(0, maxPathSumHelper(root.right, maxSum));
+
+        if (root.data + left + right > maxSum[0]) {
+            maxSum[0] = root.data + left + right;
+        }
+
+        return root.data + Math.max(left, right);
+    }
+
+    public static boolean sameTree(TreeNode<Integer> p, TreeNode<Integer> q) {
+        if (p == null && q == null) {
+            return true;
+        } else if (p == null || q == null) {
+            return false;
+        } else if (!p.data.equals(q.data)) {
+            return false;
+        }
+
+        return sameTree(p.left, q.left) && sameTree(p.right, q.right);
+    }
+
+    public static boolean isSubtree(TreeNode<Integer> root, TreeNode<Integer> subRoot) {
+        boolean isCurrentSubtree = false;
+
+        if (root == null && subRoot == null) {
+            return true;
+        } else if (root == null || subRoot == null) {
+            return false;
+        } else if (root.data.equals(subRoot.data)) {
+            isCurrentSubtree = isSubtree(root.left, subRoot.left) && isSubtree(root.right, subRoot.right);
+        }
+
+        boolean isLeftSubtree = root.left != null && isSubtree(root.left, subRoot);
+        boolean isRightSubtree = root.right != null && isSubtree(root.right, subRoot);
+
+        return isCurrentSubtree || isLeftSubtree || isRightSubtree;
+    }
+
     public TreeNode<Integer> lowestCommonAncestor(TreeNode<Integer> root, TreeNode<Integer> p, TreeNode<Integer> q) {
-        boolean[] found = new boolean[]{false, false};
+        boolean[] found = new boolean[] {false, false};
         return lowestCommonAncestorHelper(root, p.data, q.data, found);
     }
 
